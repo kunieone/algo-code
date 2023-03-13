@@ -34,20 +34,21 @@ var levelOrder = function (root) {
   return result.flat();
 };
 
-// @lc code=end
-
 var levelOrder = function (root) {
   if (root === null) return [];
-  const queue = [[root]];
-  const ptr = 0;
-  while (queue[ptr].length !== 0) {
-    for (let ii = 0; ii < queue[ptr]; ii++) {
-      const e = queue[ii];
-      queue.push(selectChildren(e));
-      ptr++;
+  const cache = [[root]];
+
+  for (let i = 0; i < cache.length; i++) {
+    let nextLevel = [];
+    for (let j = 0; j < cache[i].length; j++) {
+      nextLevel.push(...selectChildren(cache[i][j]));
+    }
+
+    if (nextLevel.length !== 0) {
+      cache.push(nextLevel);
     }
   }
-  return queue;
+  return cache.map((v) => v.map((vv) => vv.val)).flat();
 };
 
 var selectChildren = (node) => {
@@ -66,3 +67,9 @@ function test() {
   console.log(levelOrder(t));
 }
 test();
+//     2
+//  1     3
+//       4  8
+
+[[2], [1, 3]];
+// @lc code=end
